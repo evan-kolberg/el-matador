@@ -4,7 +4,6 @@ import time
 import signal
 import threading
 import subprocess
-from tkinter import E
 import urllib.parse
 
 from selenium.common.exceptions import TimeoutException
