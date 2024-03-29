@@ -1,19 +1,21 @@
+import sys
+import json
+import time
+import signal
+import threading
+import subprocess
+from tkinter import E
+import urllib.parse
+
+from selenium.common.exceptions import TimeoutException
 from selenium.webdriver import Chrome
 from selenium.webdriver import ChromeOptions
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-from selenium.common.exceptions import TimeoutException
+from selenium.webdriver.support.ui import WebDriverWait
 from webdriver_manager.chrome import ChromeDriverManager
 from random_user_agent.user_agent import UserAgent
-import urllib.parse
-import subprocess
-import threading
-import signal
-import json
-import sys
-import time
 
 user_agent = UserAgent().get_random_user_agent()
 print(user_agent)
@@ -52,7 +54,6 @@ def run_node_script(encrypted_text):
         decrypted_word = decrypted_data.get('word', '')
     node_finished_event.set()
 
-
 if __name__ == '__main__':
     try:
         driver.minimize_window()
@@ -73,21 +74,29 @@ if __name__ == '__main__':
 
         node_finished_event.wait()
         input_word('tengo')
-        input_word('llama')
+        input_word('busca')
         input_word('estar')
         input_word('adios')
+        input_word('madre')
         input_word(decrypted_word)
 
-        element = WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.XPATH, "//h2[contains(@class, 'show-solved')]")))
-        print("\033[32m\033[1mSuccessful!\033[0m\033[37m")
+        WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.ID, "copy-result")))
 
-        time.sleep(9999)
+        print("\033[32m\033[1mSuccessful!\033[0m\033[37m")
 
     except KeyboardInterrupt:
         driver.quit()
         sys.exit(0)
-    except TimeoutException:
-        print("maybe check internet connection?")
-    except Exception as e:
-        print("Error:", e)
+
+    except Exception:
+        print("\033[31m\033[1mError:")
+        import traceback
+        traceback.print_exc()
+
+    finally:
+        time.sleep(9999)
+
+
+
+
 
