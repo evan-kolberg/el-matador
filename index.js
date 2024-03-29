@@ -57,7 +57,12 @@ const aesGcmDecrypt = async (ciphertext) => {
   }
 };
 
-const encryptedText = "bVPah5aVC4fNMZfw0BEkFg/e9EnA7X9pVKlmHTFwSw8GLI2J3KDdRdIRMYuuobhRjnjLg3lQiLEf3Kgptm91c2VyuCo7Y43T"; // Replace "YourEncryptedTextHere" with the actual encrypted text
+if (process.argv.length < 3) {
+  console.error("Please provide the encrypted text as an argument.");
+  process.exit(1);
+}
+
+const encryptedText = process.argv[2];
 
 aesGcmDecrypt(encryptedText)
   .then((decryptedText) => {
