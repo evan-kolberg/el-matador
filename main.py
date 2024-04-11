@@ -2,7 +2,6 @@ import json
 import time
 import subprocess
 import urllib.parse
-from plyer import notification
 
 from selenium.webdriver.support import expected_conditions as EC
 from webdriver_manager.chrome import ChromeDriverManager
@@ -25,20 +24,14 @@ options.add_argument(f'--user-agent={user_agent}')
 options.add_argument('--incognito')
 driver = Chrome(service=Service(ChromeDriverManager().install()), options=options)
 
-
 def run_node_script(encrypted_text):
     output = subprocess.check_output(['node', 'index.js', encrypted_text], text=True)
-    notification.notify(
-        title="Node.js Script Output",
-        message=f"{output}"
-    )
     json_start_index = output.find('{')
     if json_start_index != -1:
         json_data = output[json_start_index:]
         decrypted_data = json.loads(json_data)
         decrypted_word = decrypted_data.get('word', '')
         return decrypted_word
-
 
 def main():
     decrypted_word = ""
@@ -65,12 +58,10 @@ def main():
     WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.XPATH, '//*[@id="modal-panel"]/div[1]/button'))).click()
     time.sleep(99999)
 
-
 def input_word(word):
     for i in word:
         WebDriverWait(driver, 10).until(EC.visibility_of_element_located((By.CSS_SELECTOR, f"button.key[data-key='{i}']"))).click()
     WebDriverWait(driver, 10).until(EC.visibility_of_element_located((By.CSS_SELECTOR, "button.key[data-key='enter']"))).click()
-
 
 if __name__ == "__main__":
     main()
